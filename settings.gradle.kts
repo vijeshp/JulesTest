@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Jules"
 include(":app")
+include(":imagepicker")
