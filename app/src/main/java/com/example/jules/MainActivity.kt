@@ -3,45 +3,35 @@ package com.example.jules
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.jules.ui.theme.JulesTheme
+import com.example.jules.network.ApiService
+import com.example.jules.ui.list.MyListScreen
+import com.example.jules.ui.list.MyViewModel
+import com.example.jules.ui.list.MyViewModelFactory
+import com.example.jules.ui.theme.JulesTheme // Assuming this is your theme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
+        // Typically, ApiService instance would come from a dependency injection framework
+        val apiService = ApiService.create()
+        val viewModelFactory = MyViewModelFactory(apiService)
+        val myViewModel: MyViewModel by viewModels { viewModelFactory }
+
         setContent {
-            JulesTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+            JulesTheme { // Apply your app's theme
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    MyListScreen(viewModel = myViewModel)
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    JulesTheme {
-        Greeting("Android")
     }
 }
